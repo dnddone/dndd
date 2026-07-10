@@ -15,16 +15,21 @@ pnpm + Turborepo monorepo.
 
 ```
 packages/
-  react/             # @dndd/react — headless React components (behavior + a11y, no styles)
-  utils/             # @dndd/utils — framework-agnostic helpers (type guards, ...)
-  types/             # @dndd/types — shared TypeScript types
+  react/             # @dndd/react — headless React components (behavior + a11y, no styles) — published
+  utils/             # @dndd/utils — framework-agnostic helpers (type guards, ...) — published
+  types/             # @dndd/types — shared TypeScript types — internal, not published
   eslint-config/     # @dndd/eslint-config — internal, not published
   typescript-config/ # @dndd/typescript-config — internal, not published
 ```
 
-- `@dndd/react`, `@dndd/utils`, `@dndd/types` are the **published** packages.
-- `@dndd/types` is the single source of truth for shared types — never
-  duplicate a shared type by hand in another package.
+- Only `@dndd/react` and `@dndd/utils` are **published** so far.
+- `@dndd/types` is `private` — it exports straight from `src/index.ts` (no
+  build step, no `dist`) and is meant for internal workspace use only, the
+  same pattern as `eslint-config`/`typescript-config`. It's still the single
+  source of truth for any type shared between `react` and `utils` — never
+  duplicate a shared type by hand — it's just not on npm. Since it holds only
+  compile-time types, a consuming package's own tsup build inlines them into
+  its `.d.ts` output at publish time, so this doesn't block anything.
 - There is no example/playground app yet — components are developed against
   their unit tests and types. A playground can be re-added under `apps/` later
   (the `apps/*` workspace glob is still in place).
@@ -92,8 +97,23 @@ not after every edit.
   `publishConfig.access: "public"`.
 - **React is a `peerDependency`** of `@dndd/react` (never a `dependency`) so
   consumers don't get a duplicate React.
-- Versioning/releasing via **Changesets** (`pnpm changeset`). Never hand-bump
-  versions or publish manually.
+- Releasing is driven by **GitHub Releases**, not Changesets — see
+  `.github/workflows/release.yml`. `@dndd/react` and `@dndd/utils` version
+  independently; a release tag targets exactly one of them and only that
+  package is bumped, built, and published:
+
+  ```
+  react@0.3.0   → bumps + publishes @dndd/react only
+  utils@0.2.0   → bumps + publishes @dndd/utils only
+  ```
+
+  Create the release from the GitHub UI with that tag — the workflow reads
+  the tag, bumps the package's `version` in `package.json`, builds, publishes
+  to npm, and commits the version bump back to `main`. Never hand-bump a
+  version or `npm publish` locally.
+
+- `@dndd/types` is `private` and deliberately excluded from the release
+  workflow — it's internal-only, not a published package.
 
 ## Linting
 
@@ -107,14 +127,13 @@ not after every edit.
   No `@vercel/style-guide`.
 - Rules are non-type-checked `recommended`. If you want type-aware rules later,
   add `parserOptions.projectService: true` in the shared config.
-- The only place `eslint-disable` is expected is the sanctioned `Any` type in
-  `@dndd/types` (`@typescript-eslint/no-explicit-any`).
+- `no-explicit-any` is enforced with no sanctioned escape hatch — use
+  `unknown` (see `Unknown` in `@dndd/types`) and narrow it instead.
 
 ## TypeScript
 
 - Strict mode on (`noUnusedLocals`, `noUnusedParameters`,
-  `noUncheckedIndexedAccess`). Avoid `any` — the one sanctioned escape hatch is
-  the `Any` type from `@dndd/types`, used only at genuine type boundaries.
+  `noUncheckedIndexedAccess`). No `any` — use `unknown` and narrow it.
 - Prefer `type` over `interface`. Prefer arrow functions.
 - Component props type is always named `Props`, declared directly above the
   component it belongs to. Type components with `React.FC<Props>`.

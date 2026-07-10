@@ -7,13 +7,9 @@
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
     "test": "turbo test",
-    "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
-    "changeset": "changeset",
-    "version-packages": "changeset version",
-    "release": "turbo build --filter=./packages/* && changeset publish"
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\""
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.11",
     "@dndd/eslint-config": "workspace:*",
     "@dndd/typescript-config": "workspace:*",
     "prettier": "^3.4.2",

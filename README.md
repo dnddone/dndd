@@ -13,13 +13,13 @@ are baked in, styling is not.
 | ------------------------------------------------------- | ------------------------------------------- | --------- |
 | [`@dndd/react`](packages/react)                         | Headless React components (behavior + a11y) | ✅        |
 | [`@dndd/utils`](packages/utils)                         | Framework-agnostic helpers (type guards, …) | ✅        |
-| [`@dndd/types`](packages/types)                         | Shared TypeScript types                     | ✅        |
+| [`@dndd/types`](packages/types)                         | Shared TypeScript types (internal-only)     | —         |
 | [`@dndd/eslint-config`](packages/eslint-config)         | Internal ESLint config                      | —         |
 | [`@dndd/typescript-config`](packages/typescript-config) | Internal tsconfig presets                   | —         |
 
 ## Stack
 
-pnpm workspaces · Turborepo · tsup (ESM + CJS + `.d.ts`) · Changesets.
+pnpm workspaces · Turborepo · tsup (ESM + CJS + `.d.ts`) · GitHub Actions.
 
 ## Commands
 
@@ -35,11 +35,17 @@ pnpm format      # prettier --write
 
 ## Releasing
 
-```bash
-pnpm changeset          # describe the change + pick a bump
-pnpm version-packages   # apply versions + changelogs
-pnpm release            # build packages + changeset publish
+Each package versions and releases independently via a GitHub Release. Create
+a release with a tag in the form `<package>@<version>`:
+
 ```
+react@0.3.0   → bumps, builds, and publishes @dndd/react only
+utils@0.2.0   → bumps, builds, and publishes @dndd/utils only
+```
+
+The [release workflow](.github/workflows/release.yml) reads the tag, bumps
+that package's `version`, builds, publishes to npm, and commits the bump back
+to `main`. No local `npm publish`, no manual version edits.
 
 ## Recommended companions
 
