@@ -1,81 +1,53 @@
-# Turborepo starter
+# dndd
 
-This is an official starter Turborepo.
+Headless, unstyled, accessibility-first React building blocks — plus the
+framework-agnostic utilities they lean on. A personal reuse kit, published under
+the [`@dndd`](https://www.npmjs.com/org/dndd) npm scope so it stops getting
+rebuilt in every project. Modeled loosely on
+[`@restart/ui`](https://www.npmjs.com/package/@restart/ui): behavior and a11y
+are baked in, styling is not.
 
-## Using this example
+## Packages
 
-Run the following command:
+| Package                                                 | What it is                                  | Published |
+| ------------------------------------------------------- | ------------------------------------------- | --------- |
+| [`@dndd/react`](packages/react)                         | Headless React components (behavior + a11y) | ✅        |
+| [`@dndd/utils`](packages/utils)                         | Framework-agnostic helpers (type guards, …) | ✅        |
+| [`@dndd/types`](packages/types)                         | Shared TypeScript types (internal-only)     | —         |
+| [`@dndd/eslint-config`](packages/eslint-config)         | Internal ESLint config                      | —         |
+| [`@dndd/typescript-config`](packages/typescript-config) | Internal tsconfig presets                   | —         |
 
-```sh
-npx create-turbo@latest
+## Stack
+
+pnpm workspaces · Turborepo · tsup (ESM + CJS + `.d.ts`) · GitHub Actions.
+
+## Commands
+
+```bash
+pnpm install     # install all workspaces
+pnpm dev         # rebuild packages on change (tsup --watch)
+pnpm build       # build publishable packages
+pnpm lint        # lint all
+pnpm typecheck   # type-check all
+pnpm test        # run tests
+pnpm format      # prettier --write
 ```
 
-## What's inside?
+## Releasing
 
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
+Each package versions and releases independently via a GitHub Release. Create
+a release with a tag in the form `<package>@<version>`:
 
 ```
-cd my-turborepo
-pnpm build
+react@0.3.0   → bumps, builds, and publishes @dndd/react only
+utils@0.2.0   → bumps, builds, and publishes @dndd/utils only
 ```
 
-### Develop
+The [release workflow](.github/workflows/release.yml) reads the tag, bumps
+that package's `version`, builds, publishes to npm, and commits the bump back
+to `main`. No local `npm publish`, no manual version edits.
 
-To develop all apps and packages, run the following command:
+## Recommended companions
 
-```
-cd my-turborepo
-pnpm dev
-```
-
-### Remote Caching
-
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-npx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+`@dndd/utils` stays intentionally small. For general data manipulation reach for
+[Remeda](https://remedajs.com) rather than expecting it here.
