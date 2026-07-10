@@ -1,0 +1,73 @@
+name: Release
+
+# Tag format: <package>@<version>, e.g. "react@0.3.0" or "utils@0.2.0".
+# Only the tagged package is bumped, built, and published — the other
+# package's version is left untouched.
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+env:
+  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm lint
+
+      - run: pnpm typecheck
+
+      - name: Resolve package and version from release tag
+        id: release
+        run: |
+          tag="${GITHUB_REF_NAME}"
+
+          if [[ ! "$tag" =~ ^(react|utils)@[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::Tag '$tag' doesn't match <package>@<version>, e.g. react@0.3.0 or utils@0.2.0"
+            exit 1
+          fi
+
+          package="${tag%%@*}"
+          version="${tag#*@}"
+          echo "package=$package" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "scope=@dndd/$package" >> "$GITHUB_OUTPUT"
+
+      - name: Bump package version
+        run: |
+          pnpm --filter "${{ steps.release.outputs.scope }}" version \
+            "${{ steps.release.outputs.version }}" --no-git-tag-version
+
+      - run: pnpm build
+
+      - name: Publish
+        run: |
+          pnpm --filter "${{ steps.release.outputs.scope }}" publish \
+            --access public --no-git-checks
+
+      - name: Commit version bump
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "packages/${{ steps.release.outputs.package }}/package.json"
+          git diff --staged --quiet || git commit -m "chore: release ${{ steps.release.outputs.scope }}@${{ steps.release.outputs.version }}"
+          git push origin HEAD:main
