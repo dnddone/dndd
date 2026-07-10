@@ -112,6 +112,12 @@ not after every edit.
   to npm, and commits the version bump back to `main`. Never hand-bump a
   version or `npm publish` locally.
 
+- **Changelog**: use the GitHub Release notes as the changelog. When drafting
+  a release, "Generate release notes" defaults to diffing against the last
+  tag overall — since tags interleave between packages, set the **"Previous
+  tag"** dropdown to that same package's last tag (e.g. `react@0.2.0` when
+  drafting `react@0.3.0`) so the notes don't pull in the other package's PRs.
+
 - `@dndd/types` is `private` and deliberately excluded from the release
   workflow — it's internal-only, not a published package.
 
