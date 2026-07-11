@@ -87,6 +87,10 @@ importers:
         version: 5.9.3
 
   packages/react:
+    dependencies:
+      '@dndd/utils':
+        specifier: workspace:*
+        version: link:../utils
     devDependencies:
       '@dndd/eslint-config':
         specifier: workspace:*
