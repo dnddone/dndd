@@ -11,7 +11,14 @@ npm install @dndd/utils
 ## Type guards
 
 ```ts
-import { isString, isNumber, isObject, isArray, isNullable, isBoolean } from "@dndd/utils";
+import {
+  isString,
+  isNumber,
+  isObject,
+  isArray,
+  isNullable,
+  isBoolean,
+} from "@dndd/utils";
 
 isString("hi"); // true
 isNumber("42"); // true — numeric strings count
@@ -24,6 +31,21 @@ isBoolean(true); // true
 Prefer these over raw `typeof`/`instanceof` checks — they narrow correctly
 and cover the edge cases (`isNumber` accepts finite numeric strings,
 `isObject` excludes arrays, `isString` covers boxed `String` instances).
+
+## invariant
+
+```ts
+import { invariant } from "@dndd/utils";
+
+invariant(user, "user must be defined here");
+user.name; // TypeScript now knows `user` is non-null
+
+invariant(count > 0); // throws "Invariant failed" if the condition is falsy
+```
+
+Throws if the value is `false`, `null`, or `undefined`; narrows it afterward,
+so it also works as a type guard for assumptions the type system can't verify
+on its own.
 
 ## Scope
 
