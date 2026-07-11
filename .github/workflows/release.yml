@@ -54,8 +54,17 @@ jobs:
 
       - name: Bump package version
         run: |
-          pnpm --filter "${{ steps.release.outputs.scope }}" version \
-            "${{ steps.release.outputs.version }}" --no-git-tag-version
+          cd "packages/${{ steps.release.outputs.package }}"
+          pnpm version "${{ steps.release.outputs.version }}" --no-git-tag-version
+
+      - name: Verify version bump
+        run: |
+          actual="$(node -p "require('./packages/${{ steps.release.outputs.package }}/package.json').version")"
+          expected="${{ steps.release.outputs.version }}"
+          if [[ "$actual" != "$expected" ]]; then
+            echo "::error::package.json version is '$actual', expected '$expected' — bump step failed silently"
+            exit 1
+          fi
 
       - run: pnpm build
 
