@@ -35,6 +35,9 @@
     "react": "^18 || ^19",
     "react-dom": "^18 || ^19"
   },
+  "dependencies": {
+    "@dndd/utils": "workspace:*"
+  },
   "devDependencies": {
     "@dndd/eslint-config": "workspace:*",
     "@dndd/typescript-config": "workspace:*",

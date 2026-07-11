@@ -157,6 +157,10 @@ not after every edit.
 - Prefer `type` over `interface`. Prefer arrow functions.
 - Component props type is always named `Props`, declared directly above the
   component it belongs to. Type components with `React.FC<Props>`.
+- `Props` stays locally named inside its own file (avoids collisions per
+  component), but is `export`ed so a component's folder `index.ts` can
+  re-export it under a unique public name for consumers to reuse:
+  `export type { Props as ButtonIconProps } from "./ButtonIcon";`.
 - Props extend the underlying element's own props type
   (`ButtonHTMLAttributes<HTMLButtonElement>`, `ComponentPropsWithoutRef<...>`),
   never a bare object when a DOM element is being rendered.
