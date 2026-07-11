@@ -14,6 +14,8 @@ developers would still rate as clean.
 pnpm + Turborepo monorepo.
 
 ```
+apps/
+  playground/        # Vite + React app for manually exercising @dndd/react in a browser — not published
 packages/
   react/             # @dndd/react — headless React components (behavior + a11y, no styles) — published
   utils/             # @dndd/utils — framework-agnostic helpers (type guards, ...) — published
@@ -30,9 +32,13 @@ packages/
   duplicate a shared type by hand — it's just not on npm. Since it holds only
   compile-time types, a consuming package's own tsup build inlines them into
   its `.d.ts` output at publish time, so this doesn't block anything.
-- There is no example/playground app yet — components are developed against
-  their unit tests and types. A playground can be re-added under `apps/` later
-  (the `apps/*` workspace glob is still in place).
+- `apps/playground` is a minimal Vite app for manually exercising components
+  in a real browser (unit tests cover behavior; the playground is for eyeballing
+  and clicking around). It depends on `@dndd/react` via `workspace:*`, so its
+  `dev`/`build`/`typecheck` tasks need `@dndd/react`'s `dist` to exist first —
+  `turbo`'s `^build` dependency on the `dev` task handles that. Add a section
+  to `apps/playground/src/App.tsx` for each new component as it's built; keep
+  it a flat manual scratchpad, not a Storybook-style catalog.
 - **Deep-import from third-party libraries; avoid barrel files on hot paths.**
 
 ## Design principles
@@ -60,6 +66,14 @@ multiline body only when extra context is needed.
 feat: add headless Modal
 fix: block Button activation while loading
 ```
+
+### GitHub mentions
+
+GitHub auto-links a bare `@dndd` in commit messages, PR titles/descriptions,
+and issue/PR comments to the existing GitHub user `dndd` (not this project).
+Always wrap it in backticks — `` `@dndd` `` — or other code formatting in any
+GitHub-rendered text. Code, package names, and prose in docs (like this file)
+are unaffected since GitHub doesn't parse those as mentions.
 
 ## Commands
 
