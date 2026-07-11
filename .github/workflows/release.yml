@@ -36,6 +36,8 @@ jobs:
 
       - run: pnpm typecheck
 
+      - run: pnpm test
+
       - name: Resolve package and version from release tag
         id: release
         run: |
