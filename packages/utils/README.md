@@ -47,6 +47,18 @@ Throws if the value is `false`, `null`, or `undefined`; narrows it afterward,
 so it also works as a type guard for assumptions the type system can't verify
 on its own.
 
+## ensureArray
+
+```ts
+import { ensureArray } from "@dndd/utils";
+
+ensureArray("a"); // ["a"]
+ensureArray(["a", "b"]); // ["a", "b"] — unchanged
+```
+
+Normalizes a value that may or may not already be an array — handy for props
+that accept `T | T[]`.
+
 ## Scope
 
 Stays intentionally small — a place for the handful of type guards and
