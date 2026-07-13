@@ -2,7 +2,9 @@
 
 Headless, unstyled, accessibility-first React components. Behavior, state,
 and a11y are baked in — no visual styling is applied. Bring your own
-`className`/CSS.
+`className`/CSS. Some components pair with an optional, structural-only
+stylesheet (positioning mechanics, never color/font/spacing) — see
+[Optional structural styles](#optional-structural-styles) below.
 
 ## Install
 
