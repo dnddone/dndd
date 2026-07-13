@@ -1,6 +1,14 @@
 {
   "name": "@dndd/utils",
   "version": "0.3.0",
+  "description": "Framework-agnostic TypeScript utilities — type guards and small helpers.",
+  "keywords": [
+    "typescript",
+    "utils",
+    "utilities",
+    "type-guards",
+    "helpers"
+  ],
   "license": "MIT",
   "sideEffects": false,
   "type": "module",

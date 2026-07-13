@@ -1,6 +1,18 @@
 {
   "name": "@dndd/react",
   "version": "0.2.0",
+  "description": "Headless, accessible React components — behavior and a11y baked in, styling is not.",
+  "keywords": [
+    "react",
+    "headless",
+    "unstyled",
+    "accessibility",
+    "a11y",
+    "components",
+    "ui-components",
+    "compound-components",
+    "typescript"
+  ],
   "license": "MIT",
   "sideEffects": [
     "**/*.css"
