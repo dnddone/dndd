@@ -36,3 +36,6 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
+
+# Local-only manual testing app — not shared via git, see CLAUDE.md
+apps/playground

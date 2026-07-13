@@ -15,7 +15,7 @@ pnpm + Turborepo monorepo.
 
 ```
 apps/
-  playground/        # Vite + React app for manually exercising @dndd/react in a browser — not published
+  playground/        # Vite + React app for manually exercising @dndd/react in a browser — gitignored, local-only
 packages/
   react/             # @dndd/react — headless React components (behavior + a11y, no styles) — published
   utils/             # @dndd/utils — framework-agnostic helpers (type guards, ...) — published
@@ -34,7 +34,9 @@ packages/
   its `.d.ts` output at publish time, so this doesn't block anything.
 - `apps/playground` is a minimal Vite app for manually exercising components
   in a real browser (unit tests cover behavior; the playground is for eyeballing
-  and clicking around). It depends on `@dndd/react` via `workspace:*`, so its
+  and clicking around). It's **gitignored and untracked** — a personal
+  scratchpad, not shared via git or built in CI — pending a real replacement
+  (Storybook or similar). It depends on `@dndd/react` via `workspace:*`, so its
   `dev`/`build`/`typecheck` tasks need `@dndd/react`'s `dist` to exist first —
   `turbo`'s `^build` dependency on the `dev` task handles that. Add a section
   to `apps/playground/src/App.tsx` for each new component as it's built; keep
