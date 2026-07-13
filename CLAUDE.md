@@ -17,7 +17,7 @@ pnpm + Turborepo monorepo.
 apps/
   playground/        # Vite + React app for manually exercising @dndd/react in a browser — gitignored, local-only
 packages/
-  react/             # @dndd/react — headless React components (behavior + a11y, no styles) — published
+  react/             # @dndd/react — headless React components (behavior + a11y, optional structural CSS) — published
   utils/             # @dndd/utils — framework-agnostic helpers (type guards, ...) — published
   types/             # @dndd/types — shared TypeScript types — internal, not published
   eslint-config/     # @dndd/eslint-config — internal, not published
@@ -241,16 +241,32 @@ give the outer param a more specific name).
   deps; derive state during render instead of syncing with `useEffect` +
   `useState`; `Promise.all()` independent async work.
 
-## Styling (headless + optional presets)
+## Styling (headless + optional structural CSS + future presets)
 
 The core components are **unstyled** — they render semantic elements, forward
 `className`, and spread the rest of the element props. Consumers style them
-however they like.
+however they like. No visual styling (color, font, spacing) is ever baked in,
+so the components stay headless regardless of the optional CSS below.
 
-If a styled preset layer is added later, it lives behind a separate subpath
-export (e.g. `@dndd/react/styled`) so pulling in styles is always opt-in and
-never forced on a headless consumer. Presets use `tailwind-variants` (`tv()`)
-for variants — not boolean props, not CVA.
+Some components pair with an **optional, structural-only stylesheet** at
+`@dndd/react/styles/<component>.css` (e.g. `styles/button.css`) — it exists
+only to position or toggle a compound component's own slots (hiding a label
+while loading, centering a loader over it), never anything visual:
+
+```ts
+import "@dndd/react/styles/button.css";
+```
+
+It's a separate subpath so importing it is always opt-in, never forced on a
+headless consumer. Every selector is wrapped in `:where()` to keep specificity
+at zero, so any consumer rule targeting the same elements overrides it
+automatically — no `!important` needed. Give a new component's compound slots
+the same treatment if they need positioning mechanics to behave correctly.
+
+If a _visually_ styled preset layer is added later, it lives behind its own
+separate subpath export (e.g. `@dndd/react/styled`) — same opt-in rule, but
+for actual visual design instead of mechanics. Presets would use
+`tailwind-variants` (`tv()`) for variants — not boolean props, not CVA.
 
 ## Testing
 
