@@ -2,7 +2,9 @@
   "name": "@dndd/react",
   "version": "0.1.0",
   "license": "MIT",
-  "sideEffects": false,
+  "sideEffects": [
+    "**/*.css"
+  ],
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -17,7 +19,8 @@
         "types": "./dist/index.d.cts",
         "default": "./dist/index.cjs"
       }
-    }
+    },
+    "./styles/button.css": "./dist/styles/button.css"
   },
   "files": [
     "dist"
