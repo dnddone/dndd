@@ -1,0 +1,29 @@
+/**
+ * Optional, structural-only defaults for Button's compound slots — no
+ * color, font, or spacing opinions, just the mechanics that make
+ * Button.Icon / Button.Loader / Button.Label behave as their names imply.
+ * Import once, anywhere in your app:
+ *
+ *   import "@dndd/react/styles/button.css";
+ *
+ * Bring your own spinner appearance — this file only positions it. Every
+ * rule here is wrapped in :where() to keep specificity at zero, so any
+ * selector of your own targeting the same elements wins automatically —
+ * no !important needed to override.
+ */
+
+:where([data-loading] [data-slot="label"]) {
+  visibility: hidden;
+}
+
+:where(button[data-loading]:has([data-slot="label"])) {
+  position: relative;
+}
+
+:where(button[data-loading]:has([data-slot="label"]) [data-slot="loader"]) {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
