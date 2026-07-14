@@ -12,13 +12,26 @@ type AsProp<C extends ElementType> = {
   /**
    * Component or element to render as — e.g. react-router-dom's `Link` or
    * Next.js's `Link`. Defaults to a native anchor. Ignored when the
-   * destination resolves to an external URL, since a router component
-   * can't navigate to it anyway.
+   * destination resolves to an external URL or `external` is set, since a
+   * router component can't navigate to it anyway.
    */
   as?: C;
 };
 
+type ExternalProp = {
+  /**
+   * Forces the external-link treatment (native `<a>`, `target="_blank"`,
+   * `rel="noopener noreferrer"`, `data-external`) even when the destination
+   * doesn't look external — e.g. an internal page that should deliberately
+   * open in a new tab. Absolute URLs and `mailto:`/`tel:` links get this
+   * treatment automatically; this prop is only needed to opt in for
+   * everything else.
+   */
+  external?: boolean;
+};
+
 export type Props<C extends ElementType = "a"> = AsProp<C> &
+  ExternalProp &
   Omit<ComponentPropsWithoutRef<C>, "as">;
 
 type PolymorphicRef<C extends ElementType> = ComponentPropsWithRef<C>["ref"];
@@ -36,7 +49,7 @@ const isExternalDestination = (destination: unknown): destination is string =>
     NON_HTTP_SCHEME_PATTERN.test(destination));
 
 function renderLink<C extends ElementType = "a">(
-  { as, ...props }: Props<C>,
+  { as, external = false, ...props }: Props<C>,
   ref?: PolymorphicRef<C>,
 ) {
   /**
@@ -47,9 +60,11 @@ function renderLink<C extends ElementType = "a">(
   const runtimeProps = props as unknown as Record<string, unknown>;
   const destination = isString(runtimeProps.href)
     ? runtimeProps.href
-    : runtimeProps.to;
+    : isString(runtimeProps.to)
+      ? runtimeProps.to
+      : undefined;
 
-  if (isExternalDestination(destination)) {
+  if (external || isExternalDestination(destination)) {
     const anchorProps: Record<string, unknown> = { ...runtimeProps };
     delete anchorProps.to;
 
@@ -88,8 +103,10 @@ LinkComponent.displayName = "Link";
  * Headless link. Renders a native <a> by default, or whatever component is
  * passed via `as` (react-router-dom's Link, Next.js's Link, ...) so this
  * package never depends on a router directly. When the destination is an
- * absolute URL or a `mailto:`/`tel:` link, `as` is ignored, a native <a> is
- * rendered with `target="_blank"` and `rel="noopener noreferrer"`, and
- * `data-external` is set so consumers can style their own affordance.
+ * absolute URL or a `mailto:`/`tel:` link — or `external` is explicitly
+ * set, e.g. for an internal page that should open in a new tab — `as` is
+ * ignored, a native <a> is rendered with `target="_blank"` and
+ * `rel="noopener noreferrer"`, and `data-external` is set so consumers can
+ * style their own affordance.
  */
 export const Link = LinkComponent as unknown as PolymorphicLinkComponent;
