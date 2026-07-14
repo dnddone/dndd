@@ -123,6 +123,33 @@ describe("Link", () => {
     expect(link.hasAttribute("data-external")).toBe(false);
     expect(link.getAttribute("target")).toBeNull();
   });
+
+  describe("when `external` is set on an internal destination", () => {
+    it("ignores `as` and renders a native anchor", () => {
+      const { getByRole } = render(
+        <Link as={FakeRouterLink} to="/dashboard" external>
+          Dashboard
+        </Link>,
+      );
+      const link = getByRole("link");
+
+      expect(link.hasAttribute("data-router-link")).toBe(false);
+      expect(link.getAttribute("href")).toBe("/dashboard");
+    });
+
+    it("sets target, rel, and data-external", () => {
+      const { getByRole } = render(
+        <Link href="/dashboard" external>
+          Dashboard
+        </Link>,
+      );
+      const link = getByRole("link");
+
+      expect(link.getAttribute("target")).toBe("_blank");
+      expect(link.getAttribute("rel")).toBe("noopener noreferrer");
+      expect(link.getAttribute("data-external")).toBe("true");
+    });
+  });
 });
 
 describe("Link.Icon", () => {

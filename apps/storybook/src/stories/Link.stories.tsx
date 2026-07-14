@@ -17,7 +17,9 @@ const meta = {
     children: "About us",
   },
   argTypes: {
+    external: { control: "boolean" },
     className: { control: false, table: { disable: true } },
+    children: { control: false, table: { disable: true } },
   },
   render: (args) => <Link {...args} className={linkClassName} />,
 } satisfies Meta<typeof Link>;
@@ -26,21 +28,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
-
-export const External: Story = {
-  args: {
-    href: "https://example.com",
-    children: "External site",
-  },
-};
-
-export const Mailto: Story = {
-  args: {
-    href: "mailto:hello@example.com",
-    children: "Email us",
-  },
-};
+export const Base: Story = {};
 
 export const WithIcon: Story = {
   render: (args) => (
@@ -48,5 +36,30 @@ export const WithIcon: Story = {
       {args.children}
       <Link.Icon>→</Link.Icon>
     </Link>
+  ),
+};
+
+/**
+ * Destinations that get the external-link treatment (target="_blank",
+ * rel="noopener noreferrer", data-external) — automatically for absolute
+ * URLs and mailto:/tel: links, or explicitly via `external` for an internal
+ * destination that should still open in a new tab.
+ */
+export const External: Story = {
+  render: () => (
+    <div className="flex flex-col items-start gap-3">
+      <Link className={linkClassName} href="https://example.com">
+        External site
+      </Link>
+      <Link className={linkClassName} href="mailto:hello@example.com">
+        Email us
+      </Link>
+      <Link className={linkClassName} href="tel:+15555555555">
+        Call us
+      </Link>
+      <Link className={linkClassName} href="/dashboard" external>
+        Open dashboard in new tab
+      </Link>
+    </div>
   ),
 };
