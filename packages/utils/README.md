@@ -1,5 +1,10 @@
 # @dndd/utils
 
+[![npm version](https://img.shields.io/npm/v/@dndd/utils.svg)](https://www.npmjs.com/package/@dndd/utils)
+[![CI](https://img.shields.io/github/actions/workflow/status/dnddone/dndd/ci.yml?branch=main)](https://github.com/dnddone/dndd/actions/workflows/ci.yml)
+[![license](https://img.shields.io/npm/l/@dndd/utils.svg)](https://www.npmjs.com/package/@dndd/utils)
+[![bundle size](https://img.shields.io/bundlephobia/minzip/@dndd/utils)](https://bundlephobia.com/package/@dndd/utils)
+
 Framework-agnostic helper functions with no runtime dependencies.
 
 ## Install

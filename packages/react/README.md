@@ -1,5 +1,10 @@
 # @dndd/react
 
+[![npm version](https://img.shields.io/npm/v/@dndd/react.svg)](https://www.npmjs.com/package/@dndd/react)
+[![CI](https://img.shields.io/github/actions/workflow/status/dnddone/dndd/ci.yml?branch=main)](https://github.com/dnddone/dndd/actions/workflows/ci.yml)
+[![license](https://img.shields.io/npm/l/@dndd/react.svg)](https://www.npmjs.com/package/@dndd/react)
+[![bundle size](https://img.shields.io/bundlephobia/minzip/@dndd/react)](https://bundlephobia.com/package/@dndd/react)
+
 Headless, unstyled, accessibility-first React components. Behavior, state,
 and a11y are baked in — no visual styling is applied. Bring your own
 `className`/CSS. Some components pair with an optional, structural-only
