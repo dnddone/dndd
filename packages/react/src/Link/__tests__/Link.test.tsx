@@ -124,3 +124,21 @@ describe("Link", () => {
     expect(link.getAttribute("target")).toBeNull();
   });
 });
+
+describe("Link.Icon", () => {
+  it("renders an icon slot inside the anchor", () => {
+    const { getByRole, getByText } = render(
+      <Link href="/about">
+        <Link.Icon>icon-content</Link.Icon>
+        About
+      </Link>,
+    );
+    const link = getByRole("link");
+    const icon = getByText("icon-content");
+
+    expect(link.contains(icon)).toBe(true);
+    expect(icon.tagName).toBe("SPAN");
+    expect(icon.getAttribute("data-slot")).toBe("icon");
+    expect(icon.getAttribute("aria-hidden")).toBe("true");
+  });
+});
