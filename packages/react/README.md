@@ -117,6 +117,86 @@ import type { ButtonProps } from "@dndd/react";
 type SubmitButtonProps = ButtonProps & { formId: string };
 ```
 
+## Link
+
+```tsx
+import { Link } from "@dndd/react";
+
+<Link href="/about">About</Link>;
+```
+
+Renders a native `<a>` by default and forwards every standard anchor
+attribute.
+
+### Polymorphic `as`
+
+Pass any component via `as` to render through it instead — react-router-dom's
+`Link`, Next.js's `Link`, or your own — without `@dndd/react` ever importing a
+router itself:
+
+```tsx
+import { Link as RouterLink } from "react-router-dom";
+
+<Link as={RouterLink} to="/dashboard">
+  Dashboard
+</Link>;
+```
+
+Props are generically merged from whatever `as` expects (TypeScript infers the
+right shape), so this works whether the underlying component wants `to`
+(react-router-dom) or `href` (Next.js, native `<a>`) — `Link` doesn't try to
+reconcile the two, it just reads whichever is present.
+
+### External destinations
+
+When the destination (`href` or `to`) resolves to an absolute URL, a
+protocol-relative URL, or a `mailto:`/`tel:` link, `as` is ignored — a router
+component can't navigate to it anyway — and a native `<a>` is rendered with
+`target="_blank"` and `rel="noopener noreferrer"`:
+
+```tsx
+<Link href="https://example.com">Example</Link>
+// → <a href="https://example.com" target="_blank" rel="noopener noreferrer" data-external="true">
+```
+
+`data-external` is set so you can style your own affordance (icon, visible
+"opens in new tab" text, etc.) — nothing is injected for you, since that's a
+content/i18n decision this headless library doesn't own:
+
+```css
+a[data-external="true"]::after {
+  content: "↗";
+}
+```
+
+You can still override `target`/`rel` yourself; your own props win over the
+defaults.
+
+### Compound slot: `Link.Icon`
+
+```tsx
+<Link href="/about">
+  <Link.Icon>
+    <ExternalIcon />
+  </Link.Icon>
+  About
+</Link>
+```
+
+Same `Icon` slot as `Button.Icon` — a plain `<span data-slot="icon">`
+positioned via JSX order, `aria-hidden` by default (pass your own to
+override).
+
+### Prop types
+
+`LinkProps` and `LinkIconProps` are exported for building your own wrappers:
+
+```tsx
+import type { LinkProps } from "@dndd/react";
+
+type NavLinkProps = LinkProps & { active?: boolean };
+```
+
 ## Philosophy
 
 Modeled loosely on [`@restart/ui`](https://www.npmjs.com/package/@restart/ui):
