@@ -1,0 +1,9 @@
+{
+  "extends": "@dndd/typescript-config/react-library.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "lib": ["es2022", "DOM", "DOM.Iterable"]
+  },
+  "include": ["src", ".storybook"],
+  "exclude": ["node_modules", "storybook-static"]
+}
