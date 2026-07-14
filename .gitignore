@@ -39,3 +39,6 @@ yarn-error.log*
 
 # Local-only manual testing app — not shared via git, see CLAUDE.md
 apps/playground
+
+*storybook.log
+storybook-static

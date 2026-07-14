@@ -16,6 +16,7 @@ pnpm + Turborepo monorepo.
 ```
 apps/
   playground/        # Vite + React app for manually exercising @dndd/react in a browser — gitignored, local-only
+  storybook/         # Component catalog for @dndd/react — tracked, deployed to GH Pages
 packages/
   react/             # @dndd/react — headless React components (behavior + a11y, optional structural CSS) — published
   utils/             # @dndd/utils — framework-agnostic helpers (type guards, ...) — published
@@ -35,12 +36,29 @@ packages/
 - `apps/playground` is a minimal Vite app for manually exercising components
   in a real browser (unit tests cover behavior; the playground is for eyeballing
   and clicking around). It's **gitignored and untracked** — a personal
-  scratchpad, not shared via git or built in CI — pending a real replacement
-  (Storybook or similar). It depends on `@dndd/react` via `workspace:*`, so its
-  `dev`/`build`/`typecheck` tasks need `@dndd/react`'s `dist` to exist first —
-  `turbo`'s `^build` dependency on the `dev` task handles that. Add a section
-  to `apps/playground/src/App.tsx` for each new component as it's built; keep
-  it a flat manual scratchpad, not a Storybook-style catalog.
+  scratchpad, not shared via git or built in CI. It depends on `@dndd/react`
+  via `workspace:*`, so its `dev`/`build`/`typecheck` tasks need
+  `@dndd/react`'s `dist` to exist first — `turbo`'s `^build` dependency on the
+  `dev` task handles that. Add a section to `apps/playground/src/App.tsx` for
+  each new component as it's built; keep it a flat manual scratchpad, not a
+  Storybook-style catalog — that's what `apps/storybook` is for.
+- `apps/storybook` is the public component catalog, **tracked in git** (unlike
+  the playground) and deployed to GitHub Pages via
+  `.github/workflows/deploy-storybook.yml` on every push to `main`. Storybook
+  itself (`storybook`, `@storybook/react-vite`, addons) stays a devDependency
+  of that app only — never add it to `@dndd/react`. Stories live in
+  `apps/storybook/src/stories/<Component>.stories.tsx`, one file per
+  component, importing from `@dndd/react` the same way the playground does —
+  never colocate `.stories.tsx` files inside `packages/react`. Addons are kept
+  minimal: `@storybook/addon-docs` for autodocs and `@storybook/addon-a11y`
+  for accessibility checks, matching this repo's a11y-first stance — resist
+  adding heavier addons (Chromatic, browser test runners) unless a real need
+  comes up. Like the playground, it depends on `@dndd/react`'s built `dist`,
+  so build it via `pnpm turbo build --filter=storybook` (or the root
+  `pnpm build`), never `pnpm --filter storybook build` directly, or it'll
+  build against a stale/missing `dist`. The GH Pages base path is injected at
+  build time via the `STORYBOOK_BASE_PATH` env var (see `.storybook/main.ts`),
+  since the repo is hosted at a `/<repo>/` subpath rather than a user/org root.
 - **Deep-import from third-party libraries; avoid barrel files on hot paths.**
 
 ## Design principles
