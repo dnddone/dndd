@@ -6,6 +6,7 @@ on:
     paths:
       - "packages/react/**"
       - "apps/storybook/**"
+  workflow_dispatch:
 
 permissions:
   contents: read
