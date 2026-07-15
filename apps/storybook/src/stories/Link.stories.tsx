@@ -1,5 +1,27 @@
 import { Link } from "@dndd/react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { forwardRef, type AnchorHTMLAttributes } from "react";
+
+/**
+ * Lightweight stand-ins for react-router-dom's `Link` (`to` prop) and
+ * Next.js's `Link` (`href` prop), just to demo passing a router component via
+ * `as` without pulling either framework into this Storybook app as a
+ * dependency.
+ */
+type RouterLinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
+  to: string;
+};
+
+const RouterLink = forwardRef<HTMLAnchorElement, RouterLinkProps>(
+  ({ to, ...props }, ref) => <a ref={ref} href={to} {...props} />,
+);
+RouterLink.displayName = "RouterLink";
+
+const NextLink = forwardRef<
+  HTMLAnchorElement,
+  AnchorHTMLAttributes<HTMLAnchorElement>
+>((props, ref) => <a ref={ref} {...props} />);
+NextLink.displayName = "NextLink";
 
 /**
  * Demo-only styling for the Storybook catalog — @dndd/react itself ships
@@ -59,6 +81,25 @@ export const External: Story = {
       </Link>
       <Link className={linkClassName} href="/dashboard" external>
         Open dashboard in new tab
+      </Link>
+    </div>
+  ),
+};
+
+/**
+ * Passing a router's own Link via `as` — react-router-dom's Link (`to` prop)
+ * or Next.js's Link (`href` prop) — so navigation goes through the router
+ * instead of a full page load. `RouterLink`/`NextLink` here are demo
+ * stand-ins matching each library's real API shape.
+ */
+export const WithRouter: Story = {
+  render: () => (
+    <div className="flex flex-col items-start gap-3">
+      <Link className={linkClassName} as={RouterLink} to="/dashboard">
+        react-router-dom Link
+      </Link>
+      <Link className={linkClassName} as={NextLink} href="/dashboard">
+        Next.js Link
       </Link>
     </div>
   ),
