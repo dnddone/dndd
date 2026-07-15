@@ -9,43 +9,39 @@ are baked in, styling is not.
 
 ## Packages
 
-| Package                                                 | What it is                                  | Published |
-| ------------------------------------------------------- | ------------------------------------------- | --------- |
-| [`@dndd/react`](packages/react)                         | Headless React components (behavior + a11y) | ✅        |
-| [`@dndd/utils`](packages/utils)                         | Framework-agnostic helpers (type guards, …) | ✅        |
-| [`@dndd/types`](packages/types)                         | Shared TypeScript types (internal-only)     | —         |
-| [`@dndd/eslint-config`](packages/eslint-config)         | Internal ESLint config                      | —         |
-| [`@dndd/typescript-config`](packages/typescript-config) | Internal tsconfig presets                   | —         |
+| Package                         | What it is                                  |
+| ------------------------------- | ------------------------------------------- |
+| [`@dndd/react`](packages/react) | Headless React components (behavior + a11y) |
+| [`@dndd/utils`](packages/utils) | Framework-agnostic helpers (type guards, …) |
 
-## Stack
+## Why you'd want this
 
-pnpm workspaces · Turborepo · tsup (ESM + CJS + `.d.ts`) · GitHub Actions.
+Building an accessible, keyboard-friendly component from scratch — correct
+ARIA attributes, focus management, controlled/uncontrolled state — takes real
+effort to get right, and it's easy to miss an edge case. `@dndd/react`
+components ship that behavior baked in, but render no visual styling, so they
+drop into any design system without a fight over CSS.
 
-## Commands
+For example, `Button` handles the loading/disabled a11y contract for you —
+`aria-busy`, `aria-disabled`, and blocking activation (including keyboard
+Enter/Space) — while staying fully unstyled. Compose `Button.Icon`,
+`Button.Loader`, and `Button.Label` for the visual loading state; each slot
+is just a `<span>` marked with a `data-slot` attribute, so you decide how it
+looks:
 
-```bash
-pnpm install     # install all workspaces
-pnpm dev         # rebuild packages on change (tsup --watch)
-pnpm build       # build publishable packages
-pnpm lint        # lint all
-pnpm typecheck   # type-check all
-pnpm test        # run tests
-pnpm format      # prettier --write
+```tsx
+import { Button } from "@dndd/react";
+
+<Button loading={isSaving} onClick={handleSave}>
+  <Button.Icon>
+    <SaveIcon />
+  </Button.Icon>
+  Save
+  <Button.Loader>
+    <Spinner />
+  </Button.Loader>
+</Button>;
 ```
-
-## Releasing
-
-Each package versions and releases independently via a GitHub Release. Create
-a release with a tag in the form `<package>@<version>`:
-
-```
-react@0.3.0   → bumps, builds, and publishes @dndd/react only
-utils@0.2.0   → bumps, builds, and publishes @dndd/utils only
-```
-
-The [release workflow](.github/workflows/release.yml) reads the tag, bumps
-that package's `version`, builds, publishes to npm, and commits the bump back
-to `main`. No local `npm publish`, no manual version edits.
 
 ## Recommended companions
 
