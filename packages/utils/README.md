@@ -23,6 +23,7 @@ import {
   isArray,
   isNullable,
   isBoolean,
+  isFunction,
 } from "@dndd/utils";
 
 isString("hi"); // true
@@ -31,6 +32,7 @@ isObject([1, 2]); // false — arrays are excluded
 isArray<number>(value); // value is number[]
 isNullable(value); // value is null | undefined
 isBoolean(true); // true
+isFunction(() => {}); // true — also true for classes
 ```
 
 Prefer these over raw `typeof`/`instanceof` checks — they narrow correctly
