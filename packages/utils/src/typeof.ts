@@ -24,3 +24,7 @@ export const isString = (value: unknown): value is string =>
 
 export const isArray = <T = unknown>(value: unknown): value is T[] =>
   Array.isArray(value);
+
+export const isFunction = <T extends (...args: never[]) => unknown>(
+  value: T | unknown,
+): value is T => typeof value === "function";
