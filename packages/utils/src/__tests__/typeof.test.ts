@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   isArray,
   isBoolean,
+  isFunction,
   isNullable,
   isNumber,
   isObject,
@@ -96,5 +97,20 @@ describe("isArray", () => {
     expect(isArray({})).toBe(false);
     expect(isArray("array")).toBe(false);
     expect(isArray(null)).toBe(false);
+  });
+});
+
+describe("isFunction", () => {
+  it("is true for functions", () => {
+    expect(isFunction(() => {})).toBe(true);
+    expect(isFunction(function named() {})).toBe(true);
+    expect(isFunction(class {})).toBe(true);
+  });
+
+  it("is false for non-functions", () => {
+    expect(isFunction({})).toBe(false);
+    expect(isFunction("function")).toBe(false);
+    expect(isFunction(null)).toBe(false);
+    expect(isFunction(undefined)).toBe(false);
   });
 });
