@@ -1,6 +1,6 @@
 {
   "name": "@dndd/utils",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Framework-agnostic TypeScript utilities — type guards and small helpers.",
   "keywords": [
     "typescript",
