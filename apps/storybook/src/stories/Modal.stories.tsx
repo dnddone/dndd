@@ -9,10 +9,11 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 const triggerClassName =
   "inline-flex items-center justify-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 shadow-sm transition-colors duration-150 hover:border-blue-300 hover:bg-blue-100 active:bg-blue-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 cursor-pointer";
 
-const overlayClassName = "fixed inset-0 bg-gray-900/50";
+const overlayClassName =
+  "fixed inset-0 bg-gray-900/50 transition-opacity duration-150 starting:opacity-0 data-[state=closed]:opacity-0";
 
 const contentClassName =
-  "fixed inset-0 m-auto h-fit w-80 max-w-full rounded-lg border border-gray-200 bg-white p-6 text-gray-900 shadow-lg";
+  "fixed inset-0 m-auto h-fit w-80 max-w-full rounded-lg border border-gray-200 bg-white p-6 text-gray-900 shadow-lg transition-[opacity,transform] duration-150 starting:scale-95 starting:opacity-0 data-[state=closed]:scale-95 data-[state=closed]:opacity-0";
 
 const closeClassName =
   "mt-4 inline-flex items-center justify-center rounded-md border border-gray-200 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 cursor-pointer";
