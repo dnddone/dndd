@@ -202,6 +202,48 @@ import type { LinkProps } from "@dndd/react";
 type NavLinkProps = LinkProps & { active?: boolean };
 ```
 
+## Modal
+
+```tsx
+import { Modal } from "@dndd/react";
+
+<Modal>
+  <Modal.Trigger>Open</Modal.Trigger>
+  <Modal.Overlay />
+  <Modal.Content aria-label="Example modal">
+    Content
+    <Modal.Close>Close</Modal.Close>
+  </Modal.Content>
+</Modal>;
+```
+
+`Modal.Overlay` and `Modal.Content` each portal to `document.body` (or a
+`container` you pass), so the modal is free of any parent stacking context,
+`overflow`, or `transform`. `Modal.Content` is a `role="dialog"` `aria-modal`
+panel that traps focus, moves focus inside on open, restores it to the
+trigger on close, and closes on Esc. Both slots carry `data-state="open"` /
+`"closed"` and stay mounted through a CSS exit animation/transition before
+unmounting. No visual styling is applied — style the panel and its backdrop
+however you like.
+
+- **Controlled or uncontrolled** — omit `open` to let `Modal` manage its own
+  state (seeded by `defaultOpen`), or pass `open`/`onOpenChange` to drive it
+  yourself, e.g. from a route.
+- **`Modal.Trigger`** — renders `@dndd/react`'s `Button` by default (or
+  whatever's passed via `as`) and opens the modal. Wired with
+  `aria-haspopup="dialog"`, `aria-expanded`, and `aria-controls` pointing at
+  `Modal.Content`'s `id` (auto-generated unless you pass your own).
+- **`Modal.Overlay`** — the backdrop behind `Modal.Content`. Optional:
+  clicking it requests close, subject to `onOverlayClick`. Omit it if you
+  don't want outside-click dismissal or a backdrop element at all.
+- **`Modal.Close`** — renders `@dndd/react`'s `Button` and closes the modal.
+  No default content (e.g. an "×" icon) is rendered — bring your own.
+
+### Prop types
+
+`ModalProps`, `ModalTriggerProps`, `ModalOverlayProps`, `ModalContentProps`,
+and `ModalCloseProps` are exported for building your own wrappers.
+
 ## Philosophy
 
 Modeled loosely on [`@restart/ui`](https://www.npmjs.com/package/@restart/ui):
